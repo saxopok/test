@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Drag Drop</title>
+  <style>
+    #el1, #el2 {
+      width: 100px;
+      height: 100px;
+      position: absolute;
+      border-radius: 10px;
+      text-align: center;
+      line-height: 100px;
+      color: white;
+      font-weight: bold;
+    }
+
+    #el1 {
+      background: orange;
+      left: 10px;
+      top: 10px;
+      cursor: move;
+    }
+
+    #el2 {
+      background: blue;
+      left: 200px;
+      top: 150px;
+    }
+  </style>
+</head>
+<body>
+  <div id="el1" draggable="true">Drag me</div>
+  <div id="el2">Target</div>
+  <script>
+    const el1 = document.getElementById("el1");
+    const el2 = document.getElementById("el2");
+
+    el1.addEventListener("dragstart", function (e) {
+      e.dataTransfer.setData("text", "el1");
+    });
+
+    document.body.addEventListener("dragover", function (e) {
+      e.preventDefault();
+    });
+
+    document.body.addEventListener("drop", function (e) {
+      e.preventDefault();
+      const x = e.clientX;
+      const y = e.clientY;
+      el1.style.left = x - 50 + "px";
+      el1.style.top = y - 50 + "px";
+
+      const rect1 = el1.getBoundingClientRect();
+      const rect2 = el2.getBoundingClientRect();
+
+      const isTouching = !(
+        rect1.right < rect2.left ||
+        rect1.left > rect2.right ||
+        rect1.bottom < rect2.top ||
+        rect1.top > rect2.bottom
+      );
+
+      if (isTouching) {
+        el1.style.left = el2.offsetLeft + "px";
+        el1.style.top = el2.offsetTop + "px";
+        el2.style.backgroundColor = "green";
+      }
+    });
+  </script>
+</body>
+</html>
